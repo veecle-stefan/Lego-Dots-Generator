@@ -1,0 +1,93 @@
+<template>
+  <q-layout view="lHh lpR lFf">
+
+    <q-header elevated class="bg-primary text-white">
+      <q-toolbar>
+        <q-btn dense flat round icon="menu" @click="left = !left" />
+
+       <q-toolbar-title>
+          <img class="titleimg" src="graphics/picselart-dots.png" />
+        </q-toolbar-title>
+      </q-toolbar>
+    </q-header>
+    <q-drawer
+    v-model="left"
+    side="left"
+    elevated
+    :mini="miniState"
+    @mouseover="miniState = false"
+    @mouseout="miniState = true"
+    :width="200"
+    :breakpoint="500"
+    bordered
+    content-class="bg-grey-3"
+      >
+        <q-scroll-area class="fit">
+          <q-list padding v-for="m in menuItems" :key="m.link">
+            <q-item
+            clickable
+            v-ripple
+            :active="selectedPage === m.link"
+            @click="selectedPage = m.link"
+            active-class="my-menu-link"
+            :to="m.link"
+            >
+              <q-item-section avatar>
+                <q-icon :name="m.icon" />
+              </q-item-section>
+
+              <q-item-section>{{ $t(m.title) }}</q-item-section>
+            </q-item>
+            <q-separator v-if="m.seperator === true" />
+          </q-list>
+        </q-scroll-area>
+      </q-drawer>
+    <q-page-container>
+      <router-view />
+    </q-page-container>
+
+  <q-footer elevated class="bg-grey-8 text-white">
+      <q-toolbar>
+        <q-toolbar-title>
+          <q-avatar>
+            <img src="icons/favicon-128x128.png">
+          </q-avatar>
+          {{ $t('selectpic')}}
+        </q-toolbar-title>
+      </q-toolbar>
+    </q-footer>
+
+  </q-layout>
+</template>
+
+<script lang="ts">
+import { defineComponent } from '@vue/composition-api'
+
+export default defineComponent({
+  name: 'MainLayout',
+  data () {
+    return {
+      left: false,
+      miniState: true,
+      selectedPage: 'index',
+      menuItems: [
+        { title: 'loadpicture', icon: 'add_a_photo', link: '/' },
+        { title: 'gallery', icon: 'photo_library', link: 'gallery', seperator: true },
+        { title: 'settings', icon: 'settings', link: 'settings' }
+      ]
+    }
+  }
+})
+</script>
+
+<style lang="scss">
+.titleimg {
+  height: 150px;
+}
+
+.my-menu-link {
+  color: #ffffff;
+  background: $primary
+}
+
+</style>
