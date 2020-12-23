@@ -1,0 +1,10 @@
+{
+  "appId": "de.nurnware.picselart",
+  "appName": "artpictures",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "server": {
+    "url": "http://192.168.178.23:8080"
+  }
+}

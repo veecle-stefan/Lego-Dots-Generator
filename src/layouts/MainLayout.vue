@@ -6,8 +6,11 @@
         <q-btn dense flat round icon="menu" @click="left = !left" />
 
        <q-toolbar-title>
-          <img class="titleimg" src="graphics/picselart-dots.png" />
+          {{ $t($route.meta.name) }}
         </q-toolbar-title>
+        <q-avatar>
+        <img src="icons/favicon-96x96.png">
+      </q-avatar>
       </q-toolbar>
     </q-header>
     <q-drawer
@@ -44,18 +47,6 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-
-  <q-footer elevated class="bg-grey-8 text-white">
-      <q-toolbar>
-        <q-toolbar-title>
-          <q-avatar>
-            <img src="icons/favicon-128x128.png">
-          </q-avatar>
-          {{ $t('selectpic')}}
-        </q-toolbar-title>
-      </q-toolbar>
-    </q-footer>
-
   </q-layout>
 </template>
 
@@ -69,9 +60,10 @@ export default defineComponent({
       left: false,
       miniState: true,
       menuItems: [
-        { title: 'loadpicture', icon: 'add_a_photo', link: '/' },
-        { title: 'gallery', icon: 'photo_library', link: 'gallery', seperator: true },
-        { title: 'settings', icon: 'settings', link: 'settings' }
+        { title: 'menu.loadpicture', icon: 'add_a_photo', link: '/' },
+        { title: 'menu.gallery', icon: 'photo_library', link: 'gallery', seperator: true },
+        { title: 'menu.settings', icon: 'settings', link: 'settings' },
+        { title: 'menu.about', icon: 'drag_indicator', link: 'about' }
       ]
     }
   }

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">artpictures</string>
+    <string name="title_activity_main">artpictures</string>
+    <string name="package_name">de.nurnware.picselart</string>
+    <string name="custom_url_scheme">de.nurnware.picselart</string>
+</resources>

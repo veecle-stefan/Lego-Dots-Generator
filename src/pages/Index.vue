@@ -1,25 +1,30 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <img class="boardpreview" src="graphics/empty-board.png" />
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
-            <q-fab
-              icon="add"
-              direction="up"
-              vertical-actions-align="right"
-              color="accent"
-            >
-              <q-fab-action @click="onClick" color="primary" :label="$t('takephoto')" icon="add_a_photo" />
-              <q-fab-action @click="onClick" color="primary" :label="$t('fromcameraroll')" icon="photo_library" />
-            </q-fab>
-          </q-page-sticky>
+  <q-page class="q-pa-md">
+    <div class="fit row wrap justify-around items-center content-stretch">
+      <div class="col-12 col-sm-6">
+        <picture-selector />
+      </div>
+    </div>
+    <q-footer elevated class="bg-grey-8 text-white">
+      <q-toolbar>
+        <q-toolbar-title>
+          <q-avatar square>
+            <img src="icons/speechbubble.png">
+          </q-avatar>
+          {{ $t('cta.selectpic')}}
+        </q-toolbar-title>
+      </q-toolbar>
+    </q-footer>
   </q-page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
+import PictureSelector from 'src/components/picselector.vue'
 
 export default defineComponent({
   name: 'PageIndex',
+  components: { PictureSelector },
   methods: {
     onClick () {
       console.log('Clicked on a fab action')
@@ -29,8 +34,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.boardpreview {
-  height: 40vh;
-  max-height: 500px;
-}
+
 </style>

@@ -10,10 +10,17 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
+    "@capacitor/cli": "^2.4.5",
+    "@capacitor/core": "^2.4.5",
+    "@ionic/pwa-elements": "^3.0.2",
     "@quasar/extras": "^1.0.0",
+    "@types/cordova": "0.0.34",
+    "@types/cordova-plugin-camera": "^2.4.0",
     "@vue/composition-api": "^0.6.4",
     "core-js": "^3.6.5",
+    "croppie": "^2.6.5",
     "quasar": "^1.0.0",
+    "vue-croppie": "^2.0.2",
     "vue-i18n": "^8.0.0"
   },
   "devDependencies": {

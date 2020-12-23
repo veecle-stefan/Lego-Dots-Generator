@@ -26,6 +26,7 @@ module.exports = configure(function (ctx) {
     // https://quasar.dev/quasar-cli/boot-files
     boot: [
       'composition-api',
+      'capacitor',
       'i18n'
     ],
 
@@ -109,7 +110,8 @@ module.exports = configure(function (ctx) {
 
       // Quasar plugins
       plugins: [
-        'LocalStorage'
+        'LocalStorage',
+        'Notify'
       ]
     },
 
