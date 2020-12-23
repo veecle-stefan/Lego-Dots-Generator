@@ -27,9 +27,8 @@
             <q-item
             clickable
             v-ripple
-            :active="selectedPage === m.link"
-            @click="selectedPage = m.link"
             active-class="my-menu-link"
+            exact
             :to="m.link"
             >
               <q-item-section avatar>
@@ -69,7 +68,6 @@ export default defineComponent({
     return {
       left: false,
       miniState: true,
-      selectedPage: 'index',
       menuItems: [
         { title: 'loadpicture', icon: 'add_a_photo', link: '/' },
         { title: 'gallery', icon: 'photo_library', link: 'gallery', seperator: true },
