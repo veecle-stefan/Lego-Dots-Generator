@@ -1,10 +1,6 @@
 <template>
   <q-page class="q-pa-md">
-    <div class="fit row wrap justify-around items-center content-stretch">
-      <div class="col-12 col-sm-6">
-        <picture-selector />
-      </div>
-    </div>
+    <picture-selector />
   </q-page>
 </template>
 

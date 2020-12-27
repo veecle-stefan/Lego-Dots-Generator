@@ -1,24 +1,25 @@
 <template>
   <div class="container q-ma-md">
-    <div class="fit row wrap justify-start items-start content-start">
-      <div class="col-sm-10">
-        <div class="fit column wrap justify-start items-start content-start">
-          <div v-show="imageLoaded">
-          <vue-cropper
-            ref="cropper"
-            :aspect-ratio="1 / 1"
-            drag-mode="move"
-            :src="cropperSrc"
-            @crop="userCropped"
-          />
-        </div>
-        <img v-show="!imageLoaded" src="graphics/select-board.png" style="width: 100%;" />
+    <div class="row wrap">
+      <div class="col-xs-12 col-sm-10">
+        <div class="row wrap maxpicsize">
+          <div class="col-12">
+            <vue-cropper
+              v-show="imageLoaded"
+              ref="cropper"
+              :aspect-ratio="$settings.boardWidth / $settings.boardHeight"
+              drag-mode="move"
+              :src="cropperSrc"
+              @crop="userCropped"
+            />
+            <img v-show="!imageLoaded" src="graphics/select-board.png" style="width: 100%;" />
+          </div>
           <div class="col-12 userhint">
             {{ userHint }}
           </div>
         </div>
       </div>
-      <div class="col-sm-2">
+      <div class="col-xs-12 col-sm-2">
         <div class="q-gutter-sm">
            <q-fab
             v-show="!imageLoaded"
@@ -37,8 +38,9 @@
           <q-btn v-show="imageLoaded" fab color="primary" icon="rotate_right" @click="rotate(-90)" />
         </div>
       </div>
-      <div class="col-sm-10">
-        <canvas width="48" height="48" id="scaleddown"/>
+      <div class="col-sm-12 col-md-6">
+        <canvas :width="$settings.boardWidth" :height="$settings.boardHeight" id="scaleddown" v-show="false"/>
+        <canvas id="outimg" width="500" height="500" onclick="copyToClipboard(this)"></canvas>
       </div>
     </div>
   </div>
@@ -85,12 +87,14 @@ export default class PictureSelector extends Vue {
   }
 
   userCropped () {
-    const img = new Image()
-    img.src = this.cropper.getCroppedCanvas().toDataURL()
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    img.onload = _ => {
-      if (this.smallCanvas) {
-        this.smallCanvas.drawImage(img, 0, 0, 48, 48)
+    if (this.cropper) {
+      const img = new Image()
+      img.src = this.cropper.getCroppedCanvas().toDataURL()
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      img.onload = _ => {
+        if (this.smallCanvas) {
+          this.smallCanvas.drawImage(img, 0, 0, this.$settings.boardWidth, this.$settings.boardHeight)
+        }
       }
     }
   }
@@ -135,6 +139,10 @@ export default class PictureSelector extends Vue {
 <style lang="scss">
 .boardpreview {
   width: 100%;
+}
+
+.maxpicsize {
+  max-width: 500px;
 }
 
 .userhint {

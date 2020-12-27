@@ -12,7 +12,6 @@
               emit-value
               map-options
               style="min-width: 150px"
-              @change="changedSetting('language', $event)"
             />
           <q-item-label caption>
             {{ $t('settings.languagedesc') }}
@@ -25,42 +24,48 @@
       <q-item v-ripple>
         <q-item-section>
           <div class="row q-pa-md">
-            <q-slider
-              class="col-12"
-              dark
-              v-model="numpixelsx"
-              :min="32"
-              :max="64"
-              :step="4"
-              snap
-              label
-              markers
-              label-always
-              color="primary"
-              @change="changedSetting('numpixelsx', $event)"
-            />
-            <q-slider
-              class="col-2"
-              dark
-              v-model="numpixelsy"
-              :min="32"
-              :max="64"
-              :step="4"
-              snap
-              label
-              markers
-              label-always
-              vertical
-              color="primary"
-              @change="changedSetting('numpixelsy', $event)"
-            />
-            <div class="col-10" style="width: 150px; height: 150px;">
-              <div class="aspectpreview" :style="{width: numpixelsx * 2 + 'px', height: numpixelsy * 2 + 'px'}">
-                <q-badge color="secondary">
-                  {{ numpixelsx }} x {{ numpixelsy }} <br />
-                  {{ aspectratio() }}
-                </q-badge>
+            <div class="col">
+            </div>
+            <div class="col-12 col-sm-auto">
+              <div class="row justify-left sliderhorizontal">
+                <q-slider
+                  class="col-12"
+                  dark
+                  v-model="$settings.boardWidth"
+                  :min="32"
+                  :max="64"
+                  :step="4"
+                  snap
+                  label
+                  markers
+                  label-always
+                  color="primary"
+                />
+                <q-slider
+                  class="col-2"
+                  dark
+                  v-model="$settings.boardHeight"
+                  :min="32"
+                  :max="64"
+                  :step="4"
+                  snap
+                  label
+                  markers
+                  label-always
+                  vertical
+                  color="primary"
+                />
+                <div class="col-10" style="width: 150px; height: 150px;">
+                  <div class="aspectpreview" :style="{width: boardWidth * 2 + 'px', height: boardHeight * 2 + 'px'}">
+                    <q-badge color="secondary">
+                      {{ boardWidth }} x {{ boardHeight }} <br />
+                      {{ aspectratio() }}
+                    </q-badge>
+                  </div>
+                </div>
               </div>
+            </div>
+            <div class="col">
             </div>
           </div>
           <q-item-label caption>
@@ -84,33 +89,6 @@ export default class Settings extends Vue {
     { value: 'de', label: 'Deutsch' }
   ]
 
-  get numpixelsx (): number {
-    return this.$settings.boardWidth
-  }
-
-  set numpixelsx (value: number) {
-    this.$settings.boardWidth = value
-  }
-
-  get numpixelsy (): number {
-    return this.$settings.boardHeight
-  }
-
-  set numpixelsy (value: number) {
-    this.$settings.boardHeight = value
-  }
-
-  changedSetting (propname: string, newVal: string) {
-    console.log(`User changed ${propname} to ${newVal}`)
-    try {
-      this.$q.localStorage.set(propname, newVal)
-    } catch (e) {
-      // data wasn't successfully saved due to
-      // a Web Storage API error
-      this.$q.notify(this.$t('err.localstorage'))
-    }
-  }
-
   gcd (a: number, b: number): number {
     if (!b) {
       return a
@@ -118,9 +96,19 @@ export default class Settings extends Vue {
     return this.gcd(b, a % b)
   }
 
+  get boardWidth (): number {
+    return this.$settings.boardWidth
+  }
+
+  get boardHeight (): number {
+    return this.$settings.boardHeight
+  }
+
   aspectratio (): string {
-    const g = this.gcd(this.numpixelsy, this.numpixelsx)
-    return `${this.numpixelsy / g}:${this.numpixelsx / g}`
+    const w = this.boardWidth
+    const h = this.boardHeight
+    const g = this.gcd(w, h)
+    return `${w / g}:${h / g}`
   }
 }
 </script>
@@ -128,10 +116,14 @@ export default class Settings extends Vue {
 <style lang="scss">
 .aspectpreview {
   border: 4px solid $primary;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 30px;
+  margin-top: 20px;
   padding: 5px;
   text-align: center;
   vertical-align: middle;
+}
+
+.sliderhorizontal {
+  min-width: 400px;
 }
 </style>
