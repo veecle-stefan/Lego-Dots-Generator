@@ -12,6 +12,7 @@
               emit-value
               map-options
               style="min-width: 150px"
+              @change="changedSetting('language', $event)"
             />
           <q-item-label caption>
             {{ $t('settings.languagedesc') }}
@@ -36,6 +37,7 @@
               markers
               label-always
               color="primary"
+              @change="changedSetting('numpixelsx', $event)"
             />
             <q-slider
               class="col-2"
@@ -50,12 +52,13 @@
               label-always
               vertical
               color="primary"
+              @change="changedSetting('numpixelsy', $event)"
             />
             <div class="col-10" style="width: 150px; height: 150px;">
               <div class="aspectpreview" :style="{width: numpixelsx * 2 + 'px', height: numpixelsy * 2 + 'px'}">
                 <q-badge color="secondary">
                   {{ numpixelsx }} x {{ numpixelsy }} <br />
-                  {{ aspectratio }}
+                  {{ aspectratio() }}
                 </q-badge>
               </div>
             </div>
@@ -71,44 +74,56 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { Vue, Component } from 'vue-property-decorator'
+import { MutationTypes } from '../store/appsettings/mutationtypes'
 
-export default defineComponent({
-  name: 'Settings',
-  data () {
-    return {
-      selectedlanguage: null,
-      numpixelsx: 48,
-      numpixelsy: 48,
-      langOptions: [
-        { value: 'en-us', label: 'English' },
-        { value: 'de', label: 'Deutsch' }
-      ]
-    }
-  },
-  methods: {
-    saveSettings: function () {
-      try {
-        this.$q.localStorage.set('test', '1234')
-      } catch (e) {
-        // data wasn't successfully saved due to
-        // a Web Storage API error
-      }
-    },
-    gcd: function (a: number, b: number): number {
-      if (!b) {
-        return a
-      }
-      return this.gcd(b, a % b)
-    }
-  },
-  computed: {
-    aspectratio: function (): string {
-      const g = this.gcd(this.numpixelsy, this.numpixelsx)
-      return `${this.numpixelsy / g}:${this.numpixelsx / g}`
+@Component
+export default class Settings extends Vue {
+  selectedlanguage = null
+  langOptions = [
+    { value: 'en-us', label: 'English' },
+    { value: 'de', label: 'Deutsch' }
+  ]
+
+  get numpixelsx (): number {
+    return this.$store.state.appsettings.boardDimensionX
+  }
+
+  set numpixelsx (value: number) {
+    this.$store.commit('appsettings/' + MutationTypes.SET_BOARD_X, value)
+  }
+
+  get numpixelsy (): number {
+    return this.$store.state.boardDimensionY
+  }
+
+  set numpixelsy (value: number) {
+    this.$store.commit(MutationTypes.SET_BOARD_Y, value)
+  }
+
+  changedSetting (propname: string, newVal: string) {
+    console.log(`User changed ${propname} to ${newVal}`)
+    try {
+      this.$q.localStorage.set(propname, newVal)
+    } catch (e) {
+      // data wasn't successfully saved due to
+      // a Web Storage API error
+      this.$q.notify(this.$t('err.localstorage'))
     }
   }
-})
+
+  gcd (a: number, b: number): number {
+    if (!b) {
+      return a
+    }
+    return this.gcd(b, a % b)
+  }
+
+  aspectratio (): string {
+    const g = this.gcd(this.numpixelsy, this.numpixelsx)
+    return `${this.numpixelsy / g}:${this.numpixelsx / g}`
+  }
+}
 </script>
 
 <style lang="scss">

@@ -2,6 +2,9 @@
 // so you can safely delete all default props below
 
 export default {
+  err: {
+    localstorage: 'Couldn\'t save settings. Local storage inaccessible'
+  },
   pages: {
     index: 'Convert a picture',
     gallery: 'Your Gallery',
@@ -14,9 +17,9 @@ export default {
     settings: 'Settings',
     about: 'About'
   },
-  cta: {
-    selectpic: 'Select a picture to get started.',
-    nopicyet: 'No picture loaded yet. Choose one to get started.'
+  hints: {
+    nopicyet: 'No picture loaded yet. Choose one to get started.',
+    crop: 'Select a relatively small crop area in order to preserve detail in the resulting image. You can also zoom in.'
   },
   action: {
     takephoto: 'Take photo...',
