@@ -75,7 +75,6 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { MutationTypes } from '../store/appsettings/mutationtypes'
 
 @Component
 export default class Settings extends Vue {
@@ -86,19 +85,19 @@ export default class Settings extends Vue {
   ]
 
   get numpixelsx (): number {
-    return this.$store.state.appsettings.boardDimensionX
+    return this.$settings.boardWidth
   }
 
   set numpixelsx (value: number) {
-    this.$store.commit('appsettings/' + MutationTypes.SET_BOARD_X, value)
+    this.$settings.boardWidth = value
   }
 
   get numpixelsy (): number {
-    return this.$store.state.boardDimensionY
+    return this.$settings.boardHeight
   }
 
   set numpixelsy (value: number) {
-    this.$store.commit(MutationTypes.SET_BOARD_Y, value)
+    this.$settings.boardHeight = value
   }
 
   changedSetting (propname: string, newVal: string) {

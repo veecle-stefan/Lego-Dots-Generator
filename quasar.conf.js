@@ -27,6 +27,7 @@ module.exports = configure(function (ctx) {
     boot: [
       'composition-api',
       'capacitor',
+      'globalappsettings',
       'i18n'
     ],
 
