@@ -12,7 +12,7 @@
               :src="cropperSrc"
               @crop="userCropped"
             />
-            <img v-show="!imageLoaded" src="graphics/select-board.png" style="width: 100%;" />
+            <img v-show="!imageLoaded" id="placeholder" src="graphics/select-board.png" style="width: 100%;" />
           </div>
           <div class="col-12 userhint">
             {{ userHint }}
@@ -39,8 +39,7 @@
         </div>
       </div>
       <div class="col-sm-12 col-md-6">
-        <canvas :width="$settings.boardWidth" :height="$settings.boardHeight" id="scaleddown" v-show="false"/>
-        <canvas id="outimg" width="500" height="500" onclick="copyToClipboard(this)"></canvas>
+        <canvas id="outimg" :width="canvaswidth" :height="canvasheight" onclick="copyToClipboard(this)"></canvas>
       </div>
     </div>
   </div>
@@ -53,6 +52,7 @@ import { Plugins, CameraResultType, CameraSource } from '@capacitor/core'
 import VueCropper, { VueCropperMethods } from 'vue-cropperjs'
 import 'cropperjs/dist/cropper.css'
 import { TranslateResult } from 'vue-i18n'
+import DotImage from '../dotimage'
 const { Camera } = Plugins
 
 @Component({
@@ -65,12 +65,19 @@ export default class PictureSelector extends Vue {
 
   cropperSrc = ''
   imageLoaded = false
-  smallCanvas: CanvasRenderingContext2D | null = null
+  canvas: CanvasRenderingContext2D | null = null
+  canvaswidth = 500
+  canvasheight = 500
+  dotImg: DotImage | null = null
   userHint: TranslateResult = this.$t('hints.nopicyet')
 
   mounted () {
-    const c: HTMLCanvasElement = document.getElementById('scaleddown') as HTMLCanvasElement
-    this.smallCanvas = c.getContext('2d')
+    const c = document.getElementById('outimg') as HTMLCanvasElement
+    const placeholder = document.getElementById('placeholder') as HTMLImageElement
+    this.canvas = c.getContext('2d')
+    if (this.canvas != null) {
+      this.dotImg = new DotImage(placeholder, this.canvas, this.canvaswidth, this.canvasheight, this.$settings.boardWidth, this.$settings.boardHeight)
+    }
   }
 
   discardimg () {
@@ -92,8 +99,8 @@ export default class PictureSelector extends Vue {
       img.src = this.cropper.getCroppedCanvas().toDataURL()
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       img.onload = _ => {
-        if (this.smallCanvas) {
-          this.smallCanvas.drawImage(img, 0, 0, this.$settings.boardWidth, this.$settings.boardHeight)
+        if (this.canvas && this.dotImg) {
+          this.dotImg.updateImage(img)
         }
       }
     }

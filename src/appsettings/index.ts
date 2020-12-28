@@ -1,4 +1,4 @@
-import { LocalStorage, WebStorageGetMethodReturnType } from 'quasar'
+import { LocalStorage } from 'quasar'
 import { AppDefaults } from './defaults'
 
 const Interceptor = {
