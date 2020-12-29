@@ -12,7 +12,7 @@
               :src="cropperSrc"
               @crop="userCropped"
             />
-            <img v-show="!imageLoaded" id="placeholder" src="graphics/select-board.png" style="width: 100%;" />
+            <img v-show="!imageLoaded" ref="placeholder" src="graphics/select-board.png" style="width: 100%;" />
           </div>
           <div class="col-12 userhint">
             {{ userHint }}
@@ -34,12 +34,15 @@
           <q-btn v-show="imageLoaded" fab color="accent" icon="delete" @click="discardimg"/>
           <q-btn v-show="imageLoaded" fab color="primary" icon="zoom_in" @click="zoom(0.2)" />
           <q-btn v-show="imageLoaded" fab color="primary" icon="zoom_out" @click="zoom(-0.2)"/>
-          <q-btn v-show="imageLoaded" fab color="primary" icon="rotate_left" @click="rotate(90)" />
-          <q-btn v-show="imageLoaded" fab color="primary" icon="rotate_right" @click="rotate(-90)" />
+          <q-btn v-show="imageLoaded" fab color="primary" icon="rotate_left" @click="rotate(-90)" />
+          <q-btn v-show="imageLoaded" fab color="primary" icon="rotate_right" @click="rotate(90)" />
         </div>
       </div>
       <div class="col-sm-12 col-md-6">
-        <canvas id="outimg" :width="canvaswidth" :height="canvasheight" onclick="copyToClipboard(this)"></canvas>
+        <gallery-pic :dotimage="dotImg.chromaImg" />
+      </div>
+       <div class="col-sm-12 col-md-6">
+        <palette :palette="dotImg.chromaImg ? dotImg.chromaImg.palette : null" />
       </div>
     </div>
   </div>
@@ -53,32 +56,25 @@ import VueCropper, { VueCropperMethods } from 'vue-cropperjs'
 import 'cropperjs/dist/cropper.css'
 import { TranslateResult } from 'vue-i18n'
 import DotImage from '../dotimage'
+import GalleryPic from '../components/gallerypic.vue'
+import Palette from '../components/palette.vue'
 const { Camera } = Plugins
 
 @Component({
   components: {
-    VueCropper
+    VueCropper,
+    GalleryPic,
+    Palette
   }
 })
 export default class PictureSelector extends Vue {
   @Ref() readonly cropper!: VueCropperMethods
+  @Ref() readonly placeholder!: HTMLImageElement
 
   cropperSrc = ''
   imageLoaded = false
-  canvas: CanvasRenderingContext2D | null = null
-  canvaswidth = 500
-  canvasheight = 500
-  dotImg: DotImage | null = null
+  dotImg: DotImage = new DotImage(this.placeholder, this.$settings.boardWidth, this.$settings.boardHeight)
   userHint: TranslateResult = this.$t('hints.nopicyet')
-
-  mounted () {
-    const c = document.getElementById('outimg') as HTMLCanvasElement
-    const placeholder = document.getElementById('placeholder') as HTMLImageElement
-    this.canvas = c.getContext('2d')
-    if (this.canvas != null) {
-      this.dotImg = new DotImage(placeholder, this.canvas, this.canvaswidth, this.canvasheight, this.$settings.boardWidth, this.$settings.boardHeight)
-    }
-  }
 
   discardimg () {
     this.imageLoaded = false
@@ -99,9 +95,7 @@ export default class PictureSelector extends Vue {
       img.src = this.cropper.getCroppedCanvas().toDataURL()
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       img.onload = _ => {
-        if (this.canvas && this.dotImg) {
-          this.dotImg.updateImage(img)
-        }
+        this.dotImg.updateImage(img)
       }
     }
   }

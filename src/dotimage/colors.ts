@@ -59,12 +59,12 @@ export class YCrCb {
   /**
    * Converts this YCrCb representation to RGB in (0..255)
    */
-  public ToRGB () {
+  public ToRGB (): RGB {
     const r = YCrCb.m2[0][0] * (this.Y * 255) + YCrCb.m2[0][1] * (this.Cr * 255 - 128) + YCrCb.m2[0][2] * (this.Cb * 255 - 128)
     const g = YCrCb.m2[1][0] * (this.Y * 255) + YCrCb.m2[1][1] * (this.Cr * 255 - 128) + YCrCb.m2[1][2] * (this.Cb * 255 - 128)
     const b = YCrCb.m2[2][0] * (this.Y * 255) + YCrCb.m2[2][1] * (this.Cr * 255 - 128) + YCrCb.m2[2][2] * (this.Cb * 255 - 128)
 
-    return [r, g, b]
+    return new RGB(r, g, b)
   }
 
   /**
@@ -76,7 +76,8 @@ export class YCrCb {
     const distCr = Math.abs(this.Cr - chr2.Cr)
     const distCb = Math.abs(this.Cb - chr2.Cb)
 
-    // value makes the greatest imact, then hue, than saturation
+    // quadratic error
     return distY * distY + distCr * distCr + distCb * distCb
+    // return distY + distCr + distCb
   }
 }
