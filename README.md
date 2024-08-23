@@ -1,6 +1,7 @@
-# artpictures (artpictures-app)
+# Lego Dots Pixel Art Generator
 
-Transform pictures into art
+Transform every picture into Pixel art, using the [LEGO coloured round bricks](https://www.amazon.de/dp/B0813RX3R8) ("dots")
+![Example](/doc/example-transform.png)
 
 ## Install the dependencies
 ```bash
